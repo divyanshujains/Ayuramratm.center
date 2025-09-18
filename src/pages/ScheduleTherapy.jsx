@@ -127,7 +127,7 @@ const ScheduleTherapy = () => {
           >
            Back to Patient Details
           </Link>
-
+ 
         </form>
 
 

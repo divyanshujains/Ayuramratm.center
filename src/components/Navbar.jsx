@@ -20,10 +20,13 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 text-2xl font-bold">
-            <Leaf className="text-teal-500" size={28} />
+          <Link to="/" className="flex flex-col items-center gap-2 text-2xl font-bold">
+            
             <span className="text-slate-800">Ayuramrit</span>
+            <h4>Dice code:4043</h4>
           </Link>
+
+          
 
           
 
@@ -45,12 +48,17 @@ const Navbar = () => {
 
             {/* Nav Links */}
             <nav className="flex items-center gap-4">
-              <Link to="/home" className="text-slate-600 hover:text-teal-600 transition-colors font-medium">
+              <Link to="/home"  className="text-slate-600 text-xl hover:text-teal-600 transition-colors font-medium p-2 rounded-md hover:bg-slate-100"
+            >
                 Home
               </Link>
-  
-
-
+                <Link
+              onClick={() => setIsMenuOpen(false)}
+                to="/cart"    
+                className="text-slate-600 text-xl hover:text-teal-600 transition-colors font-medium p-2 rounded-md hover:bg-slate-100"
+              >
+                Cart
+              </Link>
 
               <Link to="/" className="bg-teal-500 text-white py-2 px-5 rounded-full hover:bg-teal-600 transition-colors font-semibold text-sm shadow-sm hover:shadow-md">
                 Logout
@@ -99,12 +107,20 @@ const Navbar = () => {
                 Home
               </Link>
               <Link
-                to="/logout"
+              onClick={() => setIsMenuOpen(false)}
+                to="/cart"    
+                className="text-slate-600 hover:text-teal-600 transition-colors font-medium p-2 rounded-md hover:bg-slate-100"
+              >
+                Cart
+              </Link>
+              <Link
+                to="/"
                 onClick={() => setIsMenuOpen(false)}
                 className="bg-teal-500 text-white text-center py-2 px-5 rounded-full hover:bg-teal-600 transition-colors font-semibold text-sm shadow-sm"
               >
                 Logout
               </Link>
+             
             </nav>
           </div>
         </div>

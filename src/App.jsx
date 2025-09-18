@@ -6,6 +6,7 @@ import Register from './pages/Register'
 import Userdetails from './pages/Userdetails'
 import ScheduleTherapy from './pages/ScheduleTherapy'
 import ScheduleVideo from './pages/ScheduleVideo'
+import Cart from './pages/Cart'
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path='/Userdetails' element={<Userdetails />} />
         <Route path='/sheduletherapy' element={<ScheduleTherapy />} />
         <Route path='/shedulevideo' element={<ScheduleVideo />} />
+        <Route path='/cart' element={<Cart />} />
       </Routes>
 
       

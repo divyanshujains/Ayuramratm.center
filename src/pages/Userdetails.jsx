@@ -214,6 +214,12 @@ const Userdetails = () => {
             <span className="text-green-700 font-bold">₹5000</span>
              </div>
 
+        <div className="w-full px-4 py-2 flex items-center justify-between bg-gradient-to-r bg-red-600 
+                rounded-lg shadow-sm border text-white  font-medium text-md">
+               <span>Remove the therapy</span>
+       
+             </div>
+
 
                      
 
