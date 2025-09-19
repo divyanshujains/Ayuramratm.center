@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
+import yoga from '../assets/yoga.jpg'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -161,7 +162,7 @@ const Login = () => {
           
           {/* Placeholder for video/image */}
           <div className="w-full h-full bg-gradient-to-br from-teal-200 via-emerald-200 to-amber-200 flex items-center justify-center">
-           <img className='w-full h-full object-cover' src="https://i.pinimg.com/1200x/04/c1/30/04c13012dbee00a22920e76112ceb910.jpg" alt="" />
+           <img className='w-full h-full object-cover' src={yoga} alt="" />
           </div>
           
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent z-20"></div>

@@ -1,166 +1,257 @@
 import React, { useState } from "react";
-import { ShoppingCart, Calendar, Clock, IndianRupee, CreditCard, Trash2 } from "lucide-react";
+import {
+  ShoppingCart,
+  Calendar,
+  Clock,
+  IndianRupee,
+  CheckCircle,
+  User,
+  ChevronDown,
+} from "lucide-react";
 import Navbar from "../components/Navbar";
 
-const Cart = () => {
-  const [therapies, setTherapies] = useState([
-    {
-      id: 1,
-      name: "Herbal Therapy",
-      date: "2025-09-20",
-      time: "10:00 AM",
-      instructions: [
-        "Take herbs after meals",
-        "Avoid cold drinks",
-        "Rest for 30 minutes after therapy",
-      ],
-      cost: "8000",
-      category: "Ayurvedic Treatment"
-    },
-    {
-      id: 2,
-      name: "Meditation Session",
-      date: "2025-09-21",
-      time: "06:00 PM",
-      instructions: [
-        "Sit in quiet place",
-        "Focus on breathing",
-        "Do not use devices during session",
-      ],
-      cost: "5000",
-      category: "Mental Wellness"
-    },
-  ]);
-
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  // Calculate total cost
-  const total = therapies.reduce((sum, t) => sum + Number(t.cost), 0);
-
-  const removeTherapy = (id) => {
-    setTherapies(therapies.filter(therapy => therapy.id !== id));
-  };
-
-  const handlePayment = () => {
-    setIsProcessing(true);
-    // Simulate payment processing
-    setTimeout(() => {
-      setIsProcessing(false);
-      alert("Payment processed successfully! You will receive confirmation shortly.");
-    }, 2000);
-  };
+// Therapy Item Component
+const TherapyItem = ({ therapy, onTogglePaid }) => {
+  const [instructionsVisible, setInstructionsVisible] = useState(false);
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-IN', { 
-      weekday: 'short', 
-      day: 'numeric', 
-      month: 'short' 
+    return date.toLocaleDateString("en-IN", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
     });
   };
 
   return (
-    <>
-     <Navbar />
-   
-    <div className=" w-full h-screen x-auto p-6 bg-gradient-to-br from-green-50 to-blue-50 min-h-screen">
-      <div className="bg-white shadow-xl rounded-3xl overflow-hidden">
-    
-
-        {/* Cart Items */}
-        <div className="p-6">
-          {therapies.length === 0 ? (
-            <div className="text-center py-12 text-slate-500">
-              <ShoppingCart className="w-16 h-16 mx-auto mb-4 opacity-30" />
-              <p className="text-lg font-medium">Your cart is empty</p>
-              <p className="text-sm">Add some therapy sessions to get started</p>
+    <div
+      className={`rounded-2xl overflow-hidden border transition-all duration-300 shadow-sm hover:shadow-md ${
+        therapy.paid
+          ? "bg-green-50/60 border-green-200"
+          : "bg-white border-slate-200"
+      }`}
+    >
+      <div className="p-5 flex flex-col sm:flex-row justify-between items-start gap-4">
+        {/* Left - Therapy Details */}
+        <div className="flex-grow">
+          <div className="flex items-center gap-3 mb-2">
+            <h3 className="font-bold text-lg text-slate-800">
+              {therapy.name}
+            </h3>
+            {therapy.category && (
+              <span className="bg-gradient-to-r from-teal-100 to-green-100 text-teal-800 px-3 py-0.5 rounded-full text-xs font-semibold shadow-sm">
+                {therapy.category}
+              </span>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-slate-600">
+            <div className="flex items-center gap-1.5">
+              <Calendar className="w-4 h-4 text-green-600" />{" "}
+              {formatDate(therapy.date)}
             </div>
-          ) : (
-            <div className="space-y-4">
-              {therapies.map((therapy) => (
-                <div
-                  key={therapy.id}
-                  className="bg-gradient-to-r from-slate-50 to-white p-5 rounded-2xl border border-slate-200 hover:shadow-md transition-all duration-200"
-                >
-                  <div className="flex justify-between items-start">
-                    {/* Therapy Details */}
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-bold text-lg text-slate-800">
-                          {therapy.name}
-                        </h3>
-                        <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">
-                          {therapy.category}
-                        </span>
-                      </div>
-                      
-                      <div className="flex items-center gap-4 mb-3 text-sm text-slate-600">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          <span>{formatDate(therapy.date)}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          <span>{therapy.time}</span>
-                        </div>
-                      </div>
+            <div className="flex items-center gap-1.5">
+              <Clock className="w-4 h-4 text-green-600" /> {therapy.time}
+            </div>
+          </div>
+        </div>
 
-                      {/* Instructions Preview */}
-                      <div className="bg-blue-50 p-3 rounded-lg mb-3">
-                        <p className="text-xs font-semibold text-blue-700 mb-1">Key Instructions:</p>
-                        <p className="text-sm text-blue-600">
-                          {therapy.instructions[0]}...
-                        </p>
-                      </div>
-                    </div>
+        {/* Right - Cost + Action */}
+        <div className="flex-shrink-0 flex sm:flex-col items-end justify-between w-full sm:w-auto">
+          <div className="flex items-center justify-end gap-1 mb-0 sm:mb-2">
+            <IndianRupee
+              className={`w-5 h-5 ${
+                therapy.paid ? "text-slate-400" : "text-green-600"
+              }`}
+            />
+            <span
+              className={`font-bold text-xl ${
+                therapy.paid
+                  ? "text-slate-400 line-through"
+                  : "text-green-700"
+              }`}
+            >
+              {therapy.cost.toLocaleString("en-IN")}
+            </span>
+          </div>
+          <button
+            onClick={onTogglePaid}
+            className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-lg transition-colors ${
+              therapy.paid
+                ? "bg-green-100 text-green-700 cursor-default"
+                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+            }`}
+          >
+            <CheckCircle
+              className={`w-4 h-4 ${
+                therapy.paid ? "text-green-600" : "text-slate-400"
+              }`}
+            />
+            {therapy.paid ? "Paid" : "Mark as Paid"}
+          </button>
+        </div>
+      </div>
 
-                    {/* Price and Actions */}
-                    <div className="ml-4 text-right">
-                      <div className="flex items-center justify-end gap-1 mb-3">
-                        <IndianRupee className="w-5 h-5 text-green-600" />
-                        <span className="font-bold text-xl text-green-600">
-                          {therapy.cost}
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => removeTherapy(therapy.id)}
-                        className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-colors"
-                      >
-                        Paid in cash
-                      </button>
+      {/* Collapsible Instructions */}
+      {therapy.instructions && therapy.instructions.length > 0 && (
+        <div className="px-5 pb-4">
+          <button
+            onClick={() => setInstructionsVisible(!instructionsVisible)}
+            className="flex items-center gap-1 text-xs text-slate-500 font-semibold hover:text-slate-700"
+          >
+            Instructions{" "}
+            <ChevronDown
+              className={`w-4 h-4 transition-transform ${
+                instructionsVisible ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+          {instructionsVisible && (
+            <ul className="mt-2 text-sm text-slate-600 list-disc list-inside space-y-1 pl-1">
+              {therapy.instructions.map((inst, index) => (
+                <li key={index}>{inst}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Cart = () => {
+  const [users, setUsers] = useState([
+    {
+      id: 1,
+      name: "Aarav Sharma",
+      therapies: [
+        {
+          id: 101,
+          name: "Herbal Therapy",
+          date: "2025-09-20",
+          time: "10:00 AM",
+          instructions: [
+            "Take herbs after meals",
+            "Avoid cold drinks",
+            "Rest for 30 minutes after therapy",
+          ],
+          cost: 8000,
+          category: "Ayurveda",
+          paid: false,
+        },
+        {
+          id: 102,
+          name: "Meditation Session",
+          date: "2025-09-21",
+          time: "06:00 PM",
+          instructions: [
+            "Sit in quiet place",
+            "Focus on breathing",
+            "Do not use devices during session",
+          ],
+          cost: 5000,
+          category: "Mental Wellness",
+          paid: true,
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: "Riya Verma",
+      therapies: [
+        {
+          id: 201,
+          name: "Detox Therapy",
+          date: "2025-09-22",
+          time: "09:00 AM",
+          instructions: [
+            "Drink warm water before",
+            "No heavy meal before session",
+          ],
+          cost: 6000,
+          category: "Panchakarma",
+          paid: false,
+        },
+      ],
+    },
+  ]);
+
+  const togglePaid = (userId, therapyId) => {
+    setUsers((prevUsers) =>
+      prevUsers.map((u) =>
+        u.id === userId
+          ? {
+              ...u,
+              therapies: u.therapies.map((t) =>
+                t.id === therapyId ? { ...t, paid: !t.paid } : t
+              ),
+            }
+          : u
+      )
+    );
+  };
+
+  return (
+    <div className="w-full min-h-screen bg-gradient-to-br from-green-200 via-white to-emerald-300">
+      <Navbar />
+      <main className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-10">
+        {users.length === 0 ? (
+          <div className="text-center py-16 px-6 bg-white rounded-2xl border border-dashed shadow-sm">
+            <ShoppingCart className="w-16 h-16 mx-auto text-slate-300 mb-4" />
+            <h2 className="text-xl font-semibold text-slate-700">
+              Your cart is empty
+            </h2>
+            <p className="text-slate-500 mt-2">
+              Looks like you haven't booked any therapies yet.
+            </p>
+            <button className="mt-6 bg-gradient-to-r from-teal-500 to-green-600 text-white font-semibold px-6 py-2.5 rounded-xl hover:shadow-md transition">
+              Book a Therapy
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-14">
+            {users.map((user) => {
+              const total = user.therapies.reduce(
+                (sum, t) => sum + (t.paid ? 0 : t.cost),
+                0
+              );
+              return (
+                <div key={user.id} className="space-y-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <User className="w-7 h-7 text-green-600" />
+                    <h2 className="text-2xl font-bold text-slate-800">
+                      {user.name}'s Cart
+                    </h2>
+                  </div>
+
+                  <div className="space-y-5">
+                    {user.therapies.map((therapy) => (
+                      <TherapyItem
+                        key={therapy.id}
+                        therapy={therapy}
+                        onTogglePaid={() => togglePaid(user.id, therapy.id)}
+                      />
+                    ))}
+                  </div>
+
+                  {/* User Total */}
+                  <div className="mt-6 p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-100 shadow-sm flex justify-between items-center">
+                    <span className="font-semibold text-slate-700">
+                      Pending Amount
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <IndianRupee className="w-6 h-6 text-green-600" />
+                      <span className="text-3xl font-bold text-green-700">
+                        {total.toLocaleString("en-IN")}
+                      </span>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Summary and Payment */}
-        {therapies.length > 0 && (
-          <div className="border-t border-slate-200 bg-slate-50 p-6">
-            {/* Total */}
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <p className="text-slate-600 text-sm">Total Amount</p>
-                <p className="text-sm text-slate-500">{therapies.length} session{therapies.length > 1 ? 's' : ''}</p>
-              </div>
-              <div className="text-right">
-                <div className="flex items-center gap-1">
-                  <IndianRupee className="w-6 h-6 text-green-600" />
-                  <span className="font-bold text-3xl text-green-600">
-                    {total.toLocaleString('en-IN')}
-                  </span>
-                </div>
-                <p className="text-xs text-slate-500">Inclusive of all taxes</p>
-              </div>
-            </div>
-
+              );
+            })}
           </div>
         )}
-      </div>
+      </main>
     </div>
-     </>
   );
 };
 

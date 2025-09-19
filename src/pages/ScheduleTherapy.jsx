@@ -100,8 +100,11 @@ const ScheduleTherapy = () => {
 
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block cursor-pointer text-sm font-medium text-gray-700 mb-1">
               Cost of therapy
+            </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+              complete
             </label>
             <input
               value={TherapyCost}
